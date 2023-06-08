@@ -12,4 +12,7 @@ We also include our programs setting up the data and implementing these function
   - cluster_4_pam.R - runs PAM
   - cluster_4_pdq.R - runs probabilistic clustering
   - cluster_5_ensemble.R - uses the results from the single algorithms in the ensemble algorithm
+  - cluster_6_compare.R - compares cluster results using SuperLearner to predict quality of life
+  - cluster_6_figures.R - generate descriptive figures for clusters
+  - cluster_6_tables.R - generate descriptive tables for clusters
 
