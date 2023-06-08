@@ -103,16 +103,18 @@ uml_cv <- function(obs, clust, alpha1, alpha2, nsplits) {
     
     res.v$ps[v] <- min(ps$res, na.rm=T)
     res.v$ch[v] <- calinhara(val.num, pred)
-    res.v$si[v] <- mean(silhouette(pred, daisy(val.obs, metric="gower"))[ , 3])
+    # For SI, handle case where all obs assinged to same cluster
+    si <- silhouette(pred, daisy(val.obs, metric="gower"))
+    res.v$si[v] <- ifelse(is.na(si), NA, mean(silhouette(pred, daisy(val.obs, metric="gower"))[ , 3]))
 
   }
   
   res.k <- res.v %>% 
-    dplyr::summarize(mean_ps = mean(ps),
-              mean_ch = mean(ch),
-              min_ch = min(ch),
-              mean_si = mean(si),
-              min_si = min(si)) %>% 
+    dplyr::summarize(mean_ps = mean(ps, na.rm=T),
+              mean_ch = mean(ch, na.rm=T),
+              min_ch = min(ch, na.rm=T),
+              mean_si = mean(si, na.rm=T),
+              min_si = min(si, na.rm=T)) %>% 
     mutate(alpha1 = alpha1,
            alpha2 = alpha2)
   
