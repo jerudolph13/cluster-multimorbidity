@@ -3,7 +3,7 @@
 #
 # Project: Multimorbidity clusters in ALIVE
 #
-# Purpose: Run hierarchical clustering
+# Purpose: Run partition around medoids
 #
 # Author: Jacqueline Rudolph
 #
@@ -36,22 +36,17 @@ dat <- dat.full %>%
 
 # Optimal number of clusters (k) ------------------------------------------
 
-# Indices in full data
+# Compute cluster quality indices in full data
 full.res <- lapply(1:10, function(x){uml_cv(k=x, data=dat, algorithm="pam", nsplit=1)})
 full.res <- do.call(rbind, full.res)
-  # k = 5 wins based on CH
-  # k = 10 wins based on SI
 
 write_csv(full.res, "../results/full-metrics_pam.csv")
 
-# Cross-validation
+# Compute cluster quality indices using cross-validation
 cv.res <- lapply(1:10, function(x){uml_cv(k=x, data=dat, algorithm="pam", nsplit=5)})
 cv.res <- do.call(rbind, cv.res)
 
 write_csv(cv.res, "../results/cv-metrics_pam.csv")
-  # k = 2 wins based on PS
-  # k = 3 wins based on CH 
-  # k = 10 wins based on SI
 
 
 # Run algorithm -----------------------------------------------------------
@@ -62,7 +57,7 @@ set.seed(k)
 # Create dissimilarity matrix
 diss.matrix <- daisy(dat, metric="gower")
 
-# Hierarchical clustering using Complete Linkage
+# Partition around medoids
 pam <- pam(diss.matrix, k=k, diss=T)
 
 # Obtain cluster assignment for each observation
